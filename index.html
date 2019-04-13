@@ -1,262 +1,152 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+<body>
 
-<head>
+<canvas id="myCanvas" width="600" height="200" style="border:1px solid #d3d3d3;">
+Your browser does not support the HTML5 canvas tag.</canvas>
 
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
+<script>
+var c = document.getElementById("myCanvas");
+var ctx = c.getContext("2d");
 
-  <title>Creative - Start Bootstrap Theme</title>
+var game = {score: 0, lives: 1, state: "play", level: 1};
 
-  <!-- Font Awesome Icons -->
-  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+var gameObjects = [];
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Merriweather+Sans:400,700" rel="stylesheet">
-  <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic' rel='stylesheet' type='text/css'>
+gameObjects.push({type: "player", x:20, y:c.height/2, r:15, color:"green", speed:10});
 
-  <!-- Plugin CSS -->
-  <link href="vendor/magnific-popup/magnific-popup.css" rel="stylesheet">
+gameObjects.push({type: "harm", x:100, y:75, r:10, color:"red", speed:1});
 
-  <!-- Theme CSS - Includes Bootstrap -->
-  <link href="css/creative.min.css" rel="stylesheet">
+gameObjects.push({type: "benefit", x:20, y:25, r:20, color:"yellow", speed:1});
 
-</head>
+var player = gameObjects[0];
 
-<body id="page-top">
+var backgroundImg = new Image();
+backgroundImg.src = "space.jpg";
 
-  <!-- Navigation -->
-  <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
-    <div class="container">
-      <a class="navbar-brand js-scroll-trigger" href="#page-top">Start Bootstrap</a>
-      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarResponsive">
-        <ul class="navbar-nav ml-auto my-2 my-lg-0">
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="#about">About</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="#services">Services</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="#portfolio">Portfolio</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="#contact">Contact</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
+ctx.font = "35px Comic Sans MS";
+ctx.fillStyle = "red";
+ctx.textAlign = "center";
 
-  <!-- Masthead -->
-  <header class="masthead">
-    <div class="container h-100">
-      <div class="row h-100 align-items-center justify-content-center text-center">
-        <div class="col-lg-10 align-self-end">
-          <h1 class="text-uppercase text-white font-weight-bold">Your Favorite Source of Free Bootstrap Themes</h1>
-          <hr class="divider my-4">
-        </div>
-        <div class="col-lg-8 align-self-baseline">
-          <p class="text-white-75 font-weight-light mb-5">Start Bootstrap can help you build better websites using the Bootstrap framework! Just download a theme and start customizing, no strings attached!</p>
-          <a class="btn btn-primary btn-xl js-scroll-trigger" href="#about">Find Out More</a>
-        </div>
-      </div>
-    </div>
-  </header>
+function draw() {
+  // clear canvas
+  ctx.clearRect(0,0,c.width, c.height);
+  ctx.drawImage(backgroundImg, 0, 0);
+  // draw objects
+  
+  for (idx in gameObjects) {
+    g = gameObjects[idx];
+    ctx.beginPath();
+    ctx.arc(g.x, g.y, g.r, 0, 2 * Math.PI);
+    //ctx.stroke();
+    ctx.fillStyle = g.color;
+    ctx.fill();
 
-  <!-- About Section -->
-  <section class="page-section bg-primary" id="about">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-lg-8 text-center">
-          <h2 class="text-white mt-0">We've got what you need!</h2>
-          <hr class="divider light my-4">
-          <p class="text-white-50 mb-4">Start Bootstrap has everything you need to get your new website up and running in no time! Choose one of our open source, free to download, and easy to use themes! No strings attached!</p>
-          <a class="btn btn-light btn-xl js-scroll-trigger" href="#services">Get Started!</a>
-        </div>
-      </div>
-    </div>
-  </section>
+    if (g.type != "player") {
 
-  <!-- Services Section -->
-  <section class="page-section" id="services">
-    <div class="container">
-      <h2 class="text-center mt-0">At Your Service</h2>
-      <hr class="divider my-4">
-      <div class="row">
-        <div class="col-lg-3 col-md-6 text-center">
-          <div class="mt-5">
-            <i class="fas fa-4x fa-gem text-primary mb-4"></i>
-            <h3 class="h4 mb-2">Sturdy Themes</h3>
-            <p class="text-muted mb-0">Our themes are updated regularly to keep them bug free!</p>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-6 text-center">
-          <div class="mt-5">
-            <i class="fas fa-4x fa-laptop-code text-primary mb-4"></i>
-            <h3 class="h4 mb-2">Up to Date</h3>
-            <p class="text-muted mb-0">All dependencies are kept current to keep things fresh.</p>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-6 text-center">
-          <div class="mt-5">
-            <i class="fas fa-4x fa-globe text-primary mb-4"></i>
-            <h3 class="h4 mb-2">Ready to Publish</h3>
-            <p class="text-muted mb-0">You can use this design as is, or you can make changes!</p>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-6 text-center">
-          <div class="mt-5">
-            <i class="fas fa-4x fa-heart text-primary mb-4"></i>
-            <h3 class="h4 mb-2">Made with Love</h3>
-            <p class="text-muted mb-0">Is it really open source if it's not made with love?</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+      g.x -= g.speed * game.level;
 
-  <!-- Portfolio Section -->
-  <section id="portfolio">
-    <div class="container-fluid p-0">
-      <div class="row no-gutters">
-        <div class="col-lg-4 col-sm-6">
-          <a class="portfolio-box" href="img/portfolio/fullsize/1.jpg">
-            <img class="img-fluid" src="img/portfolio/thumbnails/1.jpg" alt="">
-            <div class="portfolio-box-caption">
-              <div class="project-category text-white-50">
-                Category
-              </div>
-              <div class="project-name">
-                Project Name
-              </div>
-            </div>
-          </a>
-        </div>
-        <div class="col-lg-4 col-sm-6">
-          <a class="portfolio-box" href="img/portfolio/fullsize/2.jpg">
-            <img class="img-fluid" src="img/portfolio/thumbnails/2.jpg" alt="">
-            <div class="portfolio-box-caption">
-              <div class="project-category text-white-50">
-                Category
-              </div>
-              <div class="project-name">
-                Project Name
-              </div>
-            </div>
-          </a>
-        </div>
-        <div class="col-lg-4 col-sm-6">
-          <a class="portfolio-box" href="img/portfolio/fullsize/3.jpg">
-            <img class="img-fluid" src="img/portfolio/thumbnails/3.jpg" alt="">
-            <div class="portfolio-box-caption">
-              <div class="project-category text-white-50">
-                Category
-              </div>
-              <div class="project-name">
-                Project Name
-              </div>
-            </div>
-          </a>
-        </div>
-        <div class="col-lg-4 col-sm-6">
-          <a class="portfolio-box" href="img/portfolio/fullsize/4.jpg">
-            <img class="img-fluid" src="img/portfolio/thumbnails/4.jpg" alt="">
-            <div class="portfolio-box-caption">
-              <div class="project-category text-white-50">
-                Category
-              </div>
-              <div class="project-name">
-                Project Name
-              </div>
-            </div>
-          </a>
-        </div>
-        <div class="col-lg-4 col-sm-6">
-          <a class="portfolio-box" href="img/portfolio/fullsize/5.jpg">
-            <img class="img-fluid" src="img/portfolio/thumbnails/5.jpg" alt="">
-            <div class="portfolio-box-caption">
-              <div class="project-category text-white-50">
-                Category
-              </div>
-              <div class="project-name">
-                Project Name
-              </div>
-            </div>
-          </a>
-        </div>
-        <div class="col-lg-4 col-sm-6">
-          <a class="portfolio-box" href="img/portfolio/fullsize/6.jpg">
-            <img class="img-fluid" src="img/portfolio/thumbnails/6.jpg" alt="">
-            <div class="portfolio-box-caption p-3">
-              <div class="project-category text-white-50">
-                Category
-              </div>
-              <div class="project-name">
-                Project Name
-              </div>
-            </div>
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
+      if (colliding(player,g)) {
+        if (g.type == "harm") {
+          game.lives --;
+        } else if (g.type == "benefit"){
+          game.score += 100;
 
-  <!-- Call to Action Section -->
-  <section class="page-section bg-dark text-white">
-    <div class="container text-center">
-      <h2 class="mb-4">Free Download at Start Bootstrap!</h2>
-      <a class="btn btn-light btn-xl" href="https://startbootstrap.com/themes/creative/">Download Now!</a>
-    </div>
-  </section>
+          if (game.score % 100 == 0) {
+            game.level ++;
+            
+            if (game.level % 2 == 0) {
+                gameObjects.push({type: "harm", x:100, y:75, r:10, color:"red", speed:1});
+            }
+            
 
-  <!-- Contact Section -->
-  <section class="page-section" id="contact">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-lg-8 text-center">
-          <h2 class="mt-0">Let's Get In Touch!</h2>
-          <hr class="divider my-4">
-          <p class="text-muted mb-5">Ready to start your next project with us? Give us a call or send us an email and we will get back to you as soon as possible!</p>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-lg-4 ml-auto text-center">
-          <i class="fas fa-phone fa-3x mb-3 text-muted"></i>
-          <div>+1 (202) 555-0149</div>
-        </div>
-        <div class="col-lg-4 mr-auto text-center">
-          <i class="fas fa-envelope fa-3x mb-3 text-muted"></i>
-          <!-- Make sure to change the email address in anchor text AND the link below! -->
-          <a class="d-block" href="mailto:contact@yourwebsite.com">contact@yourwebsite.com</a>
-        </div>
-      </div>
-    </div>
-  </section>
 
-  <!-- Footer -->
-  <footer class="bg-light py-5">
-    <div class="container">
-      <div class="small text-center text-muted">Copyright &copy; 2019 - Start Bootstrap</div>
-    </div>
-  </footer>
+          }
 
-  <!-- Bootstrap core JavaScript -->
-  <script src="vendor/jquery/jquery.min.js"></script>
-  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        }
+        console.log(game);
+        
+        g.state = "collision"
+      }
 
-  <!-- Plugin JavaScript -->
-  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-  <script src="vendor/magnific-popup/jquery.magnific-popup.min.js"></script>
 
-  <!-- Custom scripts for this template -->
-  <script src="js/creative.min.js"></script>
+
+      if ( (g.x + g.r < 0)  || g.state == "collision") {
+          g.x = c.width + g.r;
+          g.y = Math.random() * (c.height - 0) + 0;
+          g.state = "";
+        } 
+    }
+  }
+
+  // draw text
+  ctx.fillText("Score: " + game.score + " - Lives: " + game.lives, c.width/2, 30); 
+
+  
+  // next frame
+  if (game.lives > 0) {
+    window.requestAnimationFrame (draw);
+  } else {
+    gameOver();
+  }
+  
+}
+
+
+function gameOver() {
+  ctx.clearRect(0,0,c.width, c.height);
+  ctx.drawImage(backgroundImg, 0, 0);
+  ctx.fillText("Game Over", c.width/2, c.height/2);
+
+}
+
+
+window.requestAnimationFrame (draw);
+
+
+function colliding (circle1, circle2) {
+  var result = false;
+
+  var dx = circle1.x - circle2.x;
+  var dy = circle1.y - circle2.y;
+  var distance = Math.sqrt(dx * dx + dy * dy);
+
+  if (distance < circle1.r + circle2.r){
+      // collision detected!
+      result = true;
+  }
+  
+
+  return result;
+}
+
+document.onkeydown = checkKey;
+
+function checkKey(e) {
+
+    e = e || window.event;
+
+    // console.log(e);
+    if (e.keyCode == '38') {
+        // up arrow
+        player.y -= player.speed;
+    }
+    else if (e.keyCode == '40') {
+        // down arrow
+        player.y += player.speed;
+    }
+    else if (e.keyCode == '37') {
+       // left arrow
+    }
+    else if (e.keyCode == '39') {
+       // right arrow
+    }
+
+}
+
+
+
+</script> 
 
 </body>
-
 </html>
